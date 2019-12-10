@@ -1,0 +1,216 @@
+import java.util.Scanner;  // Import the Scanner class
+import java.util.Random; // Import the Random class
+/*
+Scanner intOne = new Scanner(System.in); 
+    System.out.println("");
+    String intTwo = intOne.nextLine();
+    intTwo.toLowerCase();
+*/
+
+
+
+
+//Main class
+ public class Main {
+	 
+	// DEFAULT PLAYER DATA STARTS HERE
+	    int playerHealthDefault = 40000;
+	    double playerSpeedDefault = 20;
+	    int playerDamageDefaultMax = 10;
+	    int playerEXPDefault = 0; //when the player's EXP passes a certain threshold, it will add one to the level
+	    int playerLevelDefault = 1; //when the player's level goes up, stats will each increase by two
+	    int numHealthPotions = 3; //player starts out with three health potions
+	    int potionHealAmount = 25; //potion restores 15 health when used
+	  // DEFAULT PLAYER DATA ENDS HERE 
+	 
+  public static void main(String[] args) {
+	  
+	  Main m = new Main();
+	 Scanner in = new Scanner(System.in);
+	 Random r = new Random();
+	  // ENEMY DATA STARTS HERE
+	    String[] enemies = { "Skeleton", "Ghoul", "Goblin", };
+	    int maxEnemyHealth = 50;
+	    int maxEnemyDamage = 10;
+	    int maxEnemyLevel = 20; 
+	    /*
+	  Enemy level determines its stat modifiers, an enemy won't appear above a certain level until the player
+	  has reached a certain level.
+	  */
+	   //ENEMY DATA ENDS HERE
+	  boolean gameRunning = true; 
+	  
+	  while(gameRunning) { //when gameRunning = false, the game will stop
+		  
+		  
+    //asks Username and stores data
+    Scanner userNameScanner = new Scanner(System.in); 
+    System.out.println("What's your name adventurer?");
+    String userName = userNameScanner.nextLine(); //userName stores player's name to be used later
+    
+    
+    //asks player class and stores data
+    boolean i = false;
+    do {
+    Scanner typeScanner = new Scanner(System.in); 
+    System.out.println("Do you want to be a rouge, warrior, or archer?");
+    String chosenClass = typeScanner.nextLine();
+    chosenClass.toLowerCase();
+    
+    //sets player's weapon and stat modifiers
+    if (chosenClass.equals("rouge")) {
+     String playerWeapon = ("Dagger");
+     i = false;
+    	}
+    else if (chosenClass.equals("warrior")) {
+    String playerWeapon = ("Sword");
+    i = false;
+    	}
+    else if (chosenClass.equals("archer")) {
+    String playerWeapon = ("Longbow");
+    i = false;
+    	}
+    else {
+    	i = true;
+    	}    
+    } 
+    while(i);	
+    
+    //final intro message
+    System.out.println("Okay " + userName + ". I hope you enjoy your time here!");
+    
+    //first action
+    /*
+    Scanner enctOne = new Scanner(System.in); 
+    System.out.println("");
+    String intTwo = intOne.nextLine();
+    intTwo.toLowerCase();
+    */
+    
+    System.out.println("--------------------------------------------------------------------------------------");
+    
+    Random rand = new Random();
+    int enemyHealth = rand.nextInt(maxEnemyHealth);
+    String enemy = enemies[rand.nextInt(enemies.length)]; 
+
+   System.out.println("\t# " + enemy + " has appeared! #\n");
+    GAME:
+    	 while(enemyHealth > 0){
+    		 System.out.println("--------------------------------------------------------------------------------------");
+    		System.out.println("\tYour HP:" + m.playerHealthDefault);
+    		System.out.println("\t" + enemy + "'s health: " + enemyHealth);
+    		System.out.println("\n\tWhat would you like to do?");
+    		System.out.println("\t1. Attack");
+    		System.out.println("\t2. Consume Health Potion"); 
+    		System.out.println("\t3. Run"); 
+    		System.out.println("--------------------------------------------------------------------------------------");
+    		String input = in.nextLine();
+    		if(input.equals("1")) {
+    			
+    			
+    			int playerDamageDefaultMin = m.playerDamageDefaultMax/2;
+    			int damageDealt = rand.nextInt((m.playerDamageDefaultMax - playerDamageDefaultMin) + 1) + playerDamageDefaultMin;
+    			int damageTaken = rand.nextInt(maxEnemyDamage);
+    			
+    			enemyHealth -= damageDealt;
+    			m.playerHealthDefault -=damageTaken;
+    			System.out.println("--------------------------------------------------------------------------------------");
+    			System.out.println("\t> You strike the " + enemy + " for " + damageDealt + " damage!");
+    			System.out.println("\t> The enemy retaliates for " + damageTaken + " damage!");
+    			
+    			if(m.playerHealthDefault < 1) { 
+    				System.out.println("\t> You've sustained too many injuries, you're too weak to go on!");
+    				}
+    			
+    			}
+    		else if(input.equals("2")) {
+    			
+    			if(m.numHealthPotions > 0) {
+    				m.playerHealthDefault += m.potionHealAmount;
+    				m.numHealthPotions --;
+    				System.out.println("--------------------------------------------------------------------------------------");
+    				System.out.println("You drank a health potion and healed back to " + m.playerHealthDefault +  " health. "
+    						+ "\n\t> You have " + m.numHealthPotions + " left.");
+    				}
+    			else {
+    				System.out.println("--------------------------------------------------------------------------------------");
+    				System.out.println("\t> You are all out of health potions, you can obtain more by defeating enemies.");
+    				}
+    			
+    			}
+    		else if(input.equals("3")) {
+    			
+    			System.out.println("--------------------------------------------------------------------------------------");
+    			System.out.println("You ran from the " + enemy + " . That's kinda cringe.");
+    			continue GAME;
+    			}
+    		else{
+    			System.out.println("--------------------------------------------------------------------------------------");
+    			System.out.println("Invalid option, type one of the numbers to choose your action.");
+    			}
+    		}
+    	 if(m.playerHealthDefault < 1) {
+    		 System.out.println("You vision fades, too weak to go on.");
+    		 break;
+    	 		}
+    	 System.out.println("--------------------------------------------------------------------------------------");
+    	 System.out.println(" # " + enemy + " was defeated! #");
+    	 
+    	 }
+	  }
+   
+    public void levelUp() {
+	     if (playerEXPDefault == 100) {
+	    	 playerLevelDefault = playerLevelDefault + 1;
+	    	 playerHealthDefault= playerHealthDefault + 4;
+	    	 playerSpeedDefault = playerSpeedDefault + 4;
+	    	 playerDamageDefaultMax = playerDamageDefaultMax + 4;
+	    	 System.out.println("Congratulations! You are now level " + playerLevelDefault + ". All of your stats hav increased by 4!");
+	      			}
+	    	 else if (playerEXPDefault == 225){
+	    		 playerLevelDefault = playerLevelDefault + 1;
+		    	 playerHealthDefault= playerHealthDefault + 4;
+		    	 playerSpeedDefault = playerSpeedDefault + 4;
+		    	 playerDamageDefaultMax = playerDamageDefaultMax + 4;
+		    	 System.out.println("Congratulations! You are now level " + playerLevelDefault + ". All of your stats hav increased by 4!");
+	    	 }
+	    	 else if (playerEXPDefault == 350){
+	    		 playerLevelDefault = playerLevelDefault + 1;
+		    	 playerHealthDefault= playerHealthDefault + 4;
+		    	 playerSpeedDefault = playerSpeedDefault + 4;
+		    	 playerDamageDefaultMax = playerDamageDefaultMax + 4;
+		    	 System.out.println("Congratulations! You are now level " + playerLevelDefault + ". All of your stats hav increased by 4!");
+	    	 }
+	    	 else if (playerEXPDefault == 475){
+	    		 playerLevelDefault = playerLevelDefault + 1;
+		    	 playerHealthDefault= playerHealthDefault + 4;
+		    	 playerSpeedDefault = playerSpeedDefault + 4;
+		    	 playerDamageDefaultMax = playerDamageDefaultMax + 4;
+		    	 System.out.println("Congratulations! You are now level " + playerLevelDefault + ". All of your stats hav increased by 4!");
+	    	 }
+	    	 else if (playerEXPDefault == 600){
+	    		 playerLevelDefault = playerLevelDefault + 1;
+		    	 playerHealthDefault= playerHealthDefault + 4;
+		    	 playerSpeedDefault = playerSpeedDefault + 4;
+		    	 playerDamageDefaultMax = playerDamageDefaultMax + 4;
+		    	 System.out.println("Congratulations! You are now level " + playerLevelDefault + ". All of your stats hav increased by 4!");
+	    	 }
+	    	 else if (playerEXPDefault == 725){
+	    		 playerLevelDefault = playerLevelDefault + 1;
+		    	 playerHealthDefault= playerHealthDefault + 4;
+		    	 playerSpeedDefault = playerSpeedDefault + 4;
+		    	 playerDamageDefaultMax = playerDamageDefaultMax + 4;
+		    	 System.out.println("Congratulations! You are now level " + playerLevelDefault + ". All of your stats hav increased by 4!");
+	    	 }
+	    	 else if (playerEXPDefault == 850){
+	    		 playerLevelDefault = playerLevelDefault + 1;
+		    	 playerHealthDefault= playerHealthDefault + 4;
+		    	 playerSpeedDefault = playerSpeedDefault + 4;
+		    	 playerDamageDefaultMax = playerDamageDefaultMax + 4;
+		    	 System.out.println("Congratulations! You are now level " + playerLevelDefault + ". All of your stats hav increased by 4!");
+	    	 }
+	    	 else { }
+	    	 
+	          
+    }
+ }
